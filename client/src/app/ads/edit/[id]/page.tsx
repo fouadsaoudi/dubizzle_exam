@@ -24,7 +24,7 @@ export default function EditAdPage() {
 		const fetchAd = async () => {
 			const res = await fetchData(`${config.API_URL}${api.ADS}/${id}`, "GET");
 
-			if (res.status < 400) {
+			if (res instanceof Response && res.status < 400) {
 				if (res instanceof Response) {
 					const data = await res.json();
 					const ad = data.ad;
@@ -74,8 +74,10 @@ export default function EditAdPage() {
 				// If validation errors exist
 				if (data.errors && Array.isArray(data.errors)) {
 					const errorsObj: { [key: string]: string } = {};
-					data.errors.forEach((error: any) => {
-						errorsObj[error.path] = error.msg;
+					data.errors.forEach((error: unknown) => {
+						if (typeof error === "object" && error !== null && "path" in error && "msg" in error) {
+							errorsObj[error.path as string] = error.msg as string;
+						}
 					});
 					setFormErrors(errorsObj);
 				} else {

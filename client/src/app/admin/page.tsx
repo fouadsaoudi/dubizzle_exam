@@ -62,7 +62,7 @@ export default function AdminAdsPage() {
 	};
 
 	const openModal = (ad: Ad) => {
-		setSelectedAd(ad);
+		setSelectedAd(ad as AdminAd);
 		setShowModal(true);
 		setRejectionReason("");
 	};

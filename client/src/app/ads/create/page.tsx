@@ -52,8 +52,10 @@ export default function CreateAdPage() {
 				// If validation errors exist
 				if (data.errors && Array.isArray(data.errors)) {
 					const errorsObj: { [key: string]: string } = {};
-					data.errors.forEach((error: any) => {
-						errorsObj[error.path] = error.msg;
+					data.errors.forEach((error: unknown) => {
+						if (typeof error === "object" && error !== null && "path" in error && "msg" in error) {
+							errorsObj[error.path as string] = error.msg as string;
+						}
 					});
 					setFormErrors(errorsObj);
 				} else {
