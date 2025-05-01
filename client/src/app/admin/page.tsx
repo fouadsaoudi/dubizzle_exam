@@ -86,8 +86,9 @@ export default function AdminAdsPage() {
 								<th>ID</th>
 								<th>Title</th>
 								<th>Description</th>
-								<th>User ID</th>
-								<th>Sub Category ID</th>
+								<th>User</th>
+								<th>Category</th>
+								<th>Sub Category</th>
 								<th>Price</th>
 								<th>Location</th>
 								<th>Status</th>
@@ -103,6 +104,7 @@ export default function AdminAdsPage() {
 										<td className="px-4 py-2">{ad.title}</td>
 										<td className="px-4 py-2">{ad.description}</td>
 										<td className="px-4 py-2">{ad.posted_by}</td>
+										<td className="px-4 py-2">{ad.category}</td>
 										<td className="px-4 py-2">{ad.sub_category}</td>
 										<td className="px-4 py-2">{ad.price ? `$${ad.price}` : "N/A"}</td>
 										<td className="px-4 py-2">{ad.location || "N/A"}</td>

@@ -8,6 +8,7 @@ exports.getAdminAds = async (req, res) => {
             .leftJoin('ads as child', 'ads.id', 'child.parent_ad_id')
             .join('users', 'ads.user_id', 'users.id')
             .join('sub_categories', 'ads.sub_category_id', 'sub_categories.id')
+            .join('categories', 'sub_categories.category_id', 'categories.id')
             .select(
                 'ads.id',
                 'ads.title',
@@ -20,6 +21,7 @@ exports.getAdminAds = async (req, res) => {
                 'ads.updated_at',
                 'users.username as posted_by',
                 'sub_categories.name as sub_category',
+                'categories.name as category',
                 'ads.parent_ad_id',
                 'ads.is_active'
             )

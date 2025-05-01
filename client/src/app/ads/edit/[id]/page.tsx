@@ -15,7 +15,7 @@ export default function EditAdPage() {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [location, setLocation] = useState("");
-	const [price, setPrice] = useState(0);
+	const [price, setPrice] = useState(1);
 	const [subCategoryId, setSubCategoryId] = useState<number | null>(null);
 	const [subCategories, setSubCategories] = useState<{ id: number; name: string }[]>([]);
 	const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
@@ -144,6 +144,7 @@ export default function EditAdPage() {
 							Price
 						</label>
 						<input
+							min={1}
 							id="price"
 							type="number"
 							className="border p-2 rounded"

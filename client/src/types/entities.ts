@@ -16,6 +16,7 @@ export interface Ad {
     user_id: number;
     posted_by: string | null;
     sub_category: string | null;
+    category: string | null;
     sub_category_id: number;
     title: string;
     description: string | null;

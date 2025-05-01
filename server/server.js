@@ -15,14 +15,16 @@ const subCategoriesRoute = require('./routes/subCategoriesRoutes');
 const adRoutes = require('./routes/adRoutes');
 const adminAdRoutes = require('./routes/adminAdRoutes');
 
+router.get('/', (req, res) => {
+    res.json({ message: 'hello' });
+});
+
 app.use('/api', adRoutes);
 app.use('/api', authRoutes);
 app.use('/api', adminAdRoutes);
 app.use('/api', subCategoriesRoute);
-router.get('/', (req, res) => {
-    res.json({ message: 'hello' });
-});
-app.use('/api', router);
+app.use('/', router);
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
