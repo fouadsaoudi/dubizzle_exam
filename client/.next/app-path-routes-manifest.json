@@ -1,11 +1,11 @@
 {
   "/_not-found/page": "/_not-found",
   "/favicon.ico/route": "/favicon.ico",
-  "/ads/create/page": "/ads/create",
-  "/register/page": "/register",
-  "/profile/page": "/profile",
   "/admin/page": "/admin",
-  "/ads/edit/[id]/page": "/ads/edit/[id]",
+  "/ads/create/page": "/ads/create",
   "/login/page": "/login",
+  "/profile/page": "/profile",
+  "/ads/edit/[id]/page": "/ads/edit/[id]",
+  "/register/page": "/register",
   "/page": "/"
 }

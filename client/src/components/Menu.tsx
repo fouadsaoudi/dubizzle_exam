@@ -51,6 +51,7 @@ export default function Navbar() {
 		localStorage.removeItem("token");
 		localStorage.removeItem("user");
 		setUser(null);
+		router.push("/");
 		router.refresh();
 	};
 

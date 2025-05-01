@@ -10,9 +10,31 @@ export default function RegisterPage() {
 	const router = useRouter();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
+
+	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
+	const validate = () => {
+		const newErrors: typeof errors = {};
+
+		if (username.trim().length < 3) {
+			newErrors.username = "Username must be at least 3 characters.";
+		}
+
+		if (!passwordRegex.test(password)) {
+			newErrors.password =
+				"Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
+		}
+
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+
+		if (!validate()) return;
+
 		try {
 			const res = await fetchData(config.API_URL + api.REGISTER, "POST", { username, password });
 
@@ -39,6 +61,8 @@ export default function RegisterPage() {
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 				/>
+				{errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
+
 				<input
 					type="password"
 					className="border p-2 rounded"
@@ -46,6 +70,8 @@ export default function RegisterPage() {
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 				/>
+				{errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+
 				<button className="bg-blue-600 text-white p-2 rounded" type="submit">
 					Register
 				</button>
