@@ -4,8 +4,8 @@
   "/ads/create/page": "/ads/create",
   "/login/page": "/login",
   "/admin/page": "/admin",
-  "/page": "/",
   "/profile/page": "/profile",
   "/register/page": "/register",
+  "/page": "/",
   "/ads/edit/[id]/page": "/ads/edit/[id]"
 }

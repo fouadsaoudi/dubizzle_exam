@@ -4,8 +4,8 @@
   "/ads/create/page": "app/ads/create/page.js",
   "/login/page": "app/login/page.js",
   "/admin/page": "app/admin/page.js",
-  "/page": "app/page.js",
   "/profile/page": "app/profile/page.js",
   "/register/page": "app/register/page.js",
+  "/page": "app/page.js",
   "/ads/edit/[id]/page": "app/ads/edit/[id]/page.js"
 }
