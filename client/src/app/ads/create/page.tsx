@@ -23,9 +23,8 @@ export default function CreateAdPage() {
 		const init = async () => {
 			const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-			if (!user?.token || user?.role !== "admin") {
-				router.push("/");
-				return;
+			if (!user || user.role !== "admin") {
+				return router.push("/");
 			}
 
 			await fetchSubCategories();
