@@ -19,23 +19,35 @@ export default function EditAdPage() {
 	const [subCategoryId, setSubCategoryId] = useState<number | null>(null);
 	const [subCategories, setSubCategories] = useState<{ id: number; name: string }[]>([]);
 	const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+	const [isLoading, setIsLoading] = useState(true); // ← important
 
 	useEffect(() => {
+		const init = async () => {
+			const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+			if (!user?.token || user?.role !== "admin") {
+				router.push("/");
+				return;
+			}
+
+			await fetchSubCategories();
+			await fetchAd();
+			setIsLoading(false); // ← done loading
+		};
+
 		const fetchAd = async () => {
 			const res = await fetchData(`${config.API_URL}${api.ADS}/${id}`, "GET");
 
 			if (res instanceof Response && res.status < 400) {
-				if (res instanceof Response) {
-					const data = await res.json();
-					const ad = data.ad;
-					setTitle(ad.title);
-					setDescription(ad.description);
-					setLocation(ad.location);
-					setPrice(ad.price);
-					setSubCategoryId(ad.sub_category_id);
-				} else {
-					console.error("Error fetching ad:", res);
-				}
+				const data = await res.json();
+				const ad = data.ad;
+				setTitle(ad.title);
+				setDescription(ad.description);
+				setLocation(ad.location);
+				setPrice(ad.price);
+				setSubCategoryId(ad.sub_category_id);
+			} else {
+				console.error("Error fetching ad:", res);
 			}
 		};
 
@@ -49,8 +61,7 @@ export default function EditAdPage() {
 			}
 		};
 
-		fetchSubCategories();
-		fetchAd();
+		init();
 	}, [id]);
 
 	const handleUpdate = async (e: React.FormEvent) => {
@@ -88,6 +99,9 @@ export default function EditAdPage() {
 			console.error("Error updating ad:", error);
 		}
 	};
+
+	// 🔐 Block rendering until auth check completes
+	if (isLoading) return <p className="text-center p-8">loading...</p>;
 
 	return (
 		<div>

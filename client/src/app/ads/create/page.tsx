@@ -15,20 +15,34 @@ export default function CreateAdPage() {
 	const [subCategories, setSubCategories] = useState<{ id: number; name: string }[]>([]);
 	const [subCategoryId, setSubCategoryId] = useState<number | null>(null);
 	const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+	const [isLoading, setIsLoading] = useState(true); // 🔐 Add loading state
 
 	const router = useRouter();
 
 	useEffect(() => {
+		const init = async () => {
+			const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+			if (!user?.token || user?.role !== "admin") {
+				router.push("/");
+				return;
+			}
+
+			await fetchSubCategories();
+			setIsLoading(false); // ✅ Done checking
+		};
+
 		const fetchSubCategories = async () => {
 			const res = await fetchData(config.API_URL + api.SUB_CATEGORIES, "GET");
 			if (res instanceof Response) {
-				const data = res instanceof Response ? await res.json() : null;
+				const data = await res.json();
 				setSubCategories(data.subCategories);
 			} else {
 				console.error("Error fetching subcategories:", res);
 			}
 		};
-		fetchSubCategories();
+
+		init();
 	}, []);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -66,6 +80,9 @@ export default function CreateAdPage() {
 			console.error("Error creating ad:", error);
 		}
 	};
+
+	// 👁️ Block rendering until check is complete
+	if (isLoading) return <p className="text-center p-8">loading...</p>;
 
 	return (
 		<div>

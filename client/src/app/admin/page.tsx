@@ -9,6 +9,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Textarea } from "@/components/ui/Textarea";
 import { Ad } from "@/types/entities";
 import Menu from "@/components/Menu";
+import { useRouter } from "next/navigation";
 
 interface AdminAd extends Ad {
 	posted_by: string;
@@ -23,8 +24,14 @@ export default function AdminAdsPage() {
 	const [loading, setLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
 	const [rejectionReason, setRejectionReason] = useState("");
+	const router = useRouter();
 
 	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+		if (!user || user.role !== "admin") {
+			return router.push("/");
+		}
 		fetchAds();
 	}, []);
 
@@ -72,84 +79,83 @@ export default function AdminAdsPage() {
 		setShowModal(false);
 	};
 
-	return (
+	return loading ? (
+		<p> Loading...</p>
+	) : (
 		<div>
 			<Menu />
 			<div className="p-4">
 				<h1 className="text-xl font-bold mb-4">Moderate Ads</h1>
-				{loading ? (
-					<p>Loading...</p>
-				) : (
-					<Table>
-						<thead className="bg-gray-50">
-							<tr>
-								<th>ID</th>
-								<th>Title</th>
-								<th>Description</th>
-								<th>User</th>
-								<th>Category</th>
-								<th>Sub Category</th>
-								<th>Price</th>
-								<th>Location</th>
-								<th>Status</th>
-								<th>Rejection Reason</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ads && ads.length > 0 ? (
-								ads.map((ad) => (
-									<tr key={ad.id} className="hover:bg-gray-50">
-										<td className="px-4 py-2">{ad.id}</td>
-										<td className="px-4 py-2">{ad.title}</td>
-										<td className="px-4 py-2">{ad.description}</td>
-										<td className="px-4 py-2">{ad.posted_by}</td>
-										<td className="px-4 py-2">{ad.category}</td>
-										<td className="px-4 py-2">{ad.sub_category}</td>
-										<td className="px-4 py-2">{ad.price ? `$${ad.price}` : "N/A"}</td>
-										<td className="px-4 py-2">{ad.location || "N/A"}</td>
-										<td className="px-4 py-2">
-											<span
-												className={`
+
+				<Table>
+					<thead className="bg-gray-50">
+						<tr>
+							<th>ID</th>
+							<th>Title</th>
+							<th>Description</th>
+							<th>User</th>
+							<th>Category</th>
+							<th>Sub Category</th>
+							<th>Price</th>
+							<th>Location</th>
+							<th>Status</th>
+							<th>Rejection Reason</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{ads && ads.length > 0 ? (
+							ads.map((ad) => (
+								<tr key={ad.id} className="hover:bg-gray-50">
+									<td className="px-4 py-2">{ad.id}</td>
+									<td className="px-4 py-2">{ad.title}</td>
+									<td className="px-4 py-2">{ad.description}</td>
+									<td className="px-4 py-2">{ad.posted_by}</td>
+									<td className="px-4 py-2">{ad.category}</td>
+									<td className="px-4 py-2">{ad.sub_category}</td>
+									<td className="px-4 py-2">{ad.price ? `$${ad.price}` : "N/A"}</td>
+									<td className="px-4 py-2">{ad.location || "N/A"}</td>
+									<td className="px-4 py-2">
+										<span
+											className={`
 											inline-flex px-3 py-1 rounded-full text-xs font-semibold capitalize
 											${ad.status === "approved" ? "bg-green-100 text-green-700" : ""}
 											${ad.status === "pending" ? "bg-yellow-100 text-gray-700" : ""}
 											${ad.status === "rejected" ? "bg-red-100 text-red-700" : ""}
 										`}
-											>
-												{ad.status}
-											</span>
-										</td>
-										<td className="px-4 py-2">{ad.rejection_reason || "—"}</td>
-										<td className="px-4 py-2 space-x-2 flex">
-											<Button
-												onClick={() => updateStatus(ad.id, "approved")}
-												disabled={ad.status === "approved"}
-												className="text-xs px-3 py-1"
-											>
-												Approve
-											</Button>
-											<Button
-												onClick={() => openModal(ad)}
-												disabled={ad.status === "rejected"}
-												variant="secondary"
-												className="text-xs px-3 py-1 bg-red-300"
-											>
-												Reject
-											</Button>
-										</td>
-									</tr>
-								))
-							) : (
-								<tr>
-									<td colSpan={9} className="text-center py-4 text-gray-400">
-										No ads found.
+										>
+											{ad.status}
+										</span>
+									</td>
+									<td className="px-4 py-2">{ad.rejection_reason || "—"}</td>
+									<td className="px-4 py-2 space-x-2 flex">
+										<Button
+											onClick={() => updateStatus(ad.id, "approved")}
+											disabled={ad.status === "approved"}
+											className="text-xs px-3 py-1"
+										>
+											Approve
+										</Button>
+										<Button
+											onClick={() => openModal(ad)}
+											disabled={ad.status === "rejected"}
+											variant="secondary"
+											className="text-xs px-3 py-1 bg-red-300"
+										>
+											Reject
+										</Button>
 									</td>
 								</tr>
-							)}
-						</tbody>
-					</Table>
-				)}
+							))
+						) : (
+							<tr>
+								<td colSpan={9} className="text-center py-4 text-gray-400">
+									No ads found.
+								</td>
+							</tr>
+						)}
+					</tbody>
+				</Table>
 
 				<Modal open={showModal} onClose={closeModal}>
 					<div className="p-4">
